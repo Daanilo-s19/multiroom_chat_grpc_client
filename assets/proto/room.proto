@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "manager.proto";
+
+option csharp_namespace = "Chat.Grpc";
+
+package chat;
+
+service ChatManager {
+  rpc ReceiveMessage(User) returns (stream Message);
+  rpc SendMessage(Message) returns (google.protobuf.Empty);
+  rpc ListUsers(User) returns (stream ListUser);
+  rpc ExitRoom(User) returns (google.protobuf.Empty);
+}
+
+message ListUser { repeated User users = 1; }
+
+message User {
+  string id = 1;
+  string name = 2;
+}
+
+message Message {
+  User user = 1;
+  string message = 2;
+  Room room = 3;
+}

@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Chat.Grpc";
+
+package chat;
+
+service RoomManager {
+  rpc ListRoom(google.protobuf.Empty) returns (ListRoomResponse);
+  rpc AcknowledgeRoom(AcknowledgeRoomRequest) returns (Room);
+  rpc RoomHeartbeat(RoomHeartbeatRequest)
+      returns (stream RoomHeartbeatResponse);
+  rpc CloseRoom(Room) returns (google.protobuf.Empty);
+}
+
+message ListRoomResponse { repeated Room rooms = 1; }
+
+message Room {
+  string id = 1;
+  string name = 2;
+  string address = 3;
+}
+
+message RoomHeartbeatRequest { string id = 1; }
+message RoomHeartbeatResponse {
+  string id = 1;
+  google.protobuf.Timestamp timestamp = 2;
+}
+
+message AcknowledgeRoomRequest {
+  string name = 1;
+  string address = 2;
+}

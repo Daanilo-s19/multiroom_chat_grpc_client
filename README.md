@@ -14,3 +14,10 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+
+## Generate proto
+
+```bash
+$ protoc -I=assets/proto --dart_out=grpc:lib/generated assets/proto/room.proto assets/proto/manager.proto google/protobuf/empty.proto google/protobuf/timestamp.proto
+```
