@@ -8,6 +8,10 @@ class ChatRepository {
   const ChatRepository({ChatManagerClientProvider clientProvider})
       : _clientProvider = clientProvider;
 
+  Future<void> joinRoom(User user) async {
+    await _clientProvider.client.joinRoom(user.toApi());
+  }
+
   Stream<Message> listenMessages(User user) {
     final stream = _clientProvider.client.receiveMessage(user.toApi());
 
@@ -22,5 +26,9 @@ class ChatRepository {
 
   Future<void> sendMessage(Message message) async {
     await _clientProvider.client.sendMessage(message.toApi());
+  }
+
+  Future<void> exitRoom(User user) async {
+    await _clientProvider.client.exitRoom(user.toApi());
   }
 }

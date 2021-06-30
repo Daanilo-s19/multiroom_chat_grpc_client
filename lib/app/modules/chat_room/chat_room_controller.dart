@@ -24,8 +24,7 @@ class ChatRoomController extends GetxController {
   void onInit() {
     super.onInit();
     init(Get.arguments);
-    getMessages();
-    getUserCount();
+    _setupStreams();
   }
 
   void init(Room room) {
@@ -33,23 +32,30 @@ class ChatRoomController extends GetxController {
     _room.refresh();
   }
 
+  void _setupStreams() async {
+    await _chatRepository.joinRoom(_user);
+
+    getMessages();
+    getUserCount();
+  }
+
   void getMessages() {
     final stream = _chatRepository.listenMessages(_user);
 
     stream.listen((event) {
-      final isUpdate = event.message == "User  joined.";
-      final textMessage = types.TextMessage(
-        authorId: event.user.id,
-        timestamp: DateTime.now().millisecondsSinceEpoch,
-        id: Uuid().v4(),
-        text: !isUpdate ? event.message : "",
-      );
-      addMessage(textMessage);
-      if (isUpdate) {
+      if (event.isInternal) {
         Get.snackbar(event.user.name, event.message,
             colorText: Colors.white,
             backgroundColor: Colors.grey[600].withOpacity(0.6));
+        return;
       }
+
+      final textMessage = types.TextMessage(
+          authorId: event.user.id,
+          timestamp: DateTime.now().millisecondsSinceEpoch,
+          id: Uuid().v4(),
+          text: event.message);
+      addMessage(textMessage);
     });
   }
 

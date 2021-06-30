@@ -9,13 +9,16 @@ import 'dart:async' as $async;
 
 import 'dart:core' as $core;
 
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:grpc/service_api.dart' as $grpc;
 import 'room.pb.dart' as $2;
 import 'google/protobuf/empty.pb.dart' as $0;
 export 'room.pb.dart';
 
 class ChatManagerClient extends $grpc.Client {
+  static final _$joinRoom = $grpc.ClientMethod<$2.User, $0.Empty>(
+      '/chat.ChatManager/JoinRoom',
+      ($2.User value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
   static final _$receiveMessage = $grpc.ClientMethod<$2.User, $2.Message>(
       '/chat.ChatManager/ReceiveMessage',
       ($2.User value) => value.writeToBuffer(),
@@ -37,6 +40,11 @@ class ChatManagerClient extends $grpc.Client {
       {$grpc.CallOptions? options,
       $core.Iterable<$grpc.ClientInterceptor>? interceptors})
       : super(channel, options: options, interceptors: interceptors);
+
+  $grpc.ResponseFuture<$0.Empty> joinRoom($2.User request,
+      {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$joinRoom, request, options: options);
+  }
 
   $grpc.ResponseStream<$2.Message> receiveMessage($2.User request,
       {$grpc.CallOptions? options}) {
@@ -67,6 +75,13 @@ abstract class ChatManagerServiceBase extends $grpc.Service {
   $core.String get $name => 'chat.ChatManager';
 
   ChatManagerServiceBase() {
+    $addMethod($grpc.ServiceMethod<$2.User, $0.Empty>(
+        'JoinRoom',
+        joinRoom_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $2.User.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$2.User, $2.Message>(
         'ReceiveMessage',
         receiveMessage_Pre,
@@ -97,6 +112,11 @@ abstract class ChatManagerServiceBase extends $grpc.Service {
         ($0.Empty value) => value.writeToBuffer()));
   }
 
+  $async.Future<$0.Empty> joinRoom_Pre(
+      $grpc.ServiceCall call, $async.Future<$2.User> request) async {
+    return joinRoom(call, await request);
+  }
+
   $async.Stream<$2.Message> receiveMessage_Pre(
       $grpc.ServiceCall call, $async.Future<$2.User> request) async* {
     yield* receiveMessage(call, await request);
@@ -117,6 +137,7 @@ abstract class ChatManagerServiceBase extends $grpc.Service {
     return exitRoom(call, await request);
   }
 
+  $async.Future<$0.Empty> joinRoom($grpc.ServiceCall call, $2.User request);
   $async.Stream<$2.Message> receiveMessage(
       $grpc.ServiceCall call, $2.User request);
   $async.Future<$0.Empty> sendMessage(
