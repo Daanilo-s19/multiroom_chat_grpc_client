@@ -9,6 +9,7 @@ import 'dart:async' as $async;
 
 import 'dart:core' as $core;
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:grpc/service_api.dart' as $grpc;
 import 'room.pb.dart' as $2;
 import 'google/protobuf/empty.pb.dart' as $0;

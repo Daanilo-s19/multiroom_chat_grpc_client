@@ -4,31 +4,31 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class RoomListScreen extends GetView<RoomListController> {
+  Widget _render() {
+    if (controller.roomList == null || controller.roomList.isEmpty) {
+      return Center(
+        child: Text("Sem salas até o momento"),
+      );
+    }
+
+    return ListView(
+      children: [
+        for (var room in controller.roomList)
+          InkWell(
+            onTap: () => Get.toNamed(AppRoutes.chat, arguments: room),
+            child: Card(
+              child: ListTile(title: Text(room.name)),
+            ),
+          )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(),
-      body: GetX<RoomListController>(initState: (_) async {
-        await _.controller.listRooms();
-      }, builder: (_) {
-        if (_.roomList == null || _.roomList.isEmpty) {
-          return Center(
-            child: Text("Sem salas até o momento"),
-          );
-        }
-
-        return ListView(
-          children: [
-            for (var room in _.roomList)
-              InkWell(
-                onTap: () => Get.toNamed(AppRoutes.chat, arguments: room),
-                child: Card(
-                  child: ListTile(title: Text(room.name)),
-                ),
-              )
-          ],
-        );
-      }),
+      body: Obx(() => _render()),
     );
   }
 

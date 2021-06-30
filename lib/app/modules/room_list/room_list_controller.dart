@@ -11,8 +11,15 @@ class RoomListController extends GetxController {
       : _repository = repository,
         super();
 
+  @override
+  onInit() async {
+    super.onInit();
+    await listRooms();
+  }
+
   Future<void> listRooms() async {
-    _roomList.value = await _repository.listRooms();
+    final result = await _repository.listRooms();
+    _roomList.assignAll(result);
   }
 
   List<Room> get roomList => List<Room>.from(_roomList);
