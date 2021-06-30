@@ -8,17 +8,14 @@ class ChatRoomBindings implements Bindings {
   @override
   void dependencies() {
     final Room room = Get.arguments;
-    Get.put<ChatManagerClientProvider>(
-      ChatManagerClientProvider(room.address),
-      permanent: false,
+    Get.lazyPut<ChatManagerClientProvider>(
+      () => ChatManagerClientProvider(room.address),
     );
-    Get.put<ChatRepository>(
-      ChatRepository(clientProvider: Get.find()),
-      permanent: true,
+    Get.lazyPut<ChatRepository>(
+      () => ChatRepository(clientProvider: Get.find()),
     );
-    Get.put<ChatRoomController>(
-      ChatRoomController(repository: Get.find()),
-      permanent: true,
+    Get.lazyPut<ChatRoomController>(
+      () => ChatRoomController(repository: Get.find()),
     );
   }
 }

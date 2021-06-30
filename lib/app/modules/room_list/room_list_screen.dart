@@ -17,7 +17,11 @@ class RoomListScreen extends GetView<RoomListController> {
           InkWell(
             onTap: () => Get.toNamed(AppRoutes.chat, arguments: room),
             child: Card(
-              child: ListTile(title: Text(room.name)),
+              margin: EdgeInsets.fromLTRB(32, 0, 32, 16),
+              child: ListTile(
+                title: Text(room.name),
+                subtitle: Text("Esta sala utilzia tecnologia GRPC"),
+              ),
             ),
           )
       ],
@@ -27,12 +31,16 @@ class RoomListScreen extends GetView<RoomListController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: _appBar(),
       body: Obx(() => _render()),
     );
   }
 
   Widget _appBar() {
-    return AppBar(title: Text("Salas"));
+    return AppBar(
+      title: Text("Salas"),
+      backgroundColor: Colors.black,
+    );
   }
 }

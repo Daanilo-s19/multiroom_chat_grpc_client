@@ -7,13 +7,20 @@ import 'package:get/get.dart';
 class ChatRoomScreen extends GetView<ChatRoomController> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Obx(
-      () => Chat(
-        messages: controller.messagesChat,
-        onSendPressed: (message) => controller.sendMessage(message.text),
-        user: controller.userChat,
+    return Obx(
+      () => Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          centerTitle: true,
+          title: Text(
+              "Sala: ${controller.room.name} - users: ${controller.userCount}"),
+        ),
+        body: Chat(
+          messages: [...controller.messagesChat],
+          onSendPressed: (message) => controller.sendMessage(message.text),
+          user: controller.userChat,
+        ),
       ),
-    ));
+    );
   }
 }
