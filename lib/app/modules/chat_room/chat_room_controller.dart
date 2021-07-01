@@ -74,6 +74,12 @@ class ChatRoomController extends GetxController {
     ));
   }
 
+  @override
+  void onClose() async {
+    await _chatRepository.exitRoom(_user);
+    super.onClose();
+  }
+
   void setUserName(String name) {
     _user = User(id: _user.id, name: name);
   }
