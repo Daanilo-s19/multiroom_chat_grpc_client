@@ -63,13 +63,18 @@ class ChatRoomScreen extends GetView<ChatRoomController> {
             for (final user in controller.users)
               Card(
                 child: ListTile(
-                  title: Text(user.name),
-                  subtitle: Text(user.id),
-                  leading: Icon(
-                    Icons.account_circle,
-                    size: 32,
-                  ),
-                ),
+                    title: Text(user.name),
+                    subtitle: Text(user.id),
+                    leading: Container(
+                      height: 80,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: NetworkImage('https://picsum.photos/200/200'),
+                        ),
+                      ),
+                    )),
               ),
           ],
         ),

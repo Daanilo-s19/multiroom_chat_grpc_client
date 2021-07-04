@@ -1,7 +1,6 @@
-import 'package:aplication_flutter_grpc/app/data/models/user_model.dart';
 import 'package:aplication_flutter_grpc/app/modules/chat_room/chat_room_argument.dart';
 import 'package:aplication_flutter_grpc/app/modules/room_list/room_list_controller.dart';
-import 'package:aplication_flutter_grpc/app/modules/room_list/widgets/user_modal_widget.dart';
+import 'package:aplication_flutter_grpc/app/modules/signin/signin_controller.dart';
 import 'package:aplication_flutter_grpc/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -28,20 +27,11 @@ class RoomListScreen extends GetView<RoomListController> {
         for (var room in controller.roomList)
           InkWell(
             onTap: () async {
-              final user = await showModalBottomSheet<User>(
-                context: Get.context,
-                builder: (_) => UserModal(),
-              );
-
-              if (user == null) {
-                return;
-              }
-
-              return Get.toNamed(
+              await Get.toNamed(
                 AppRoutes.chat,
                 arguments: ChatRoomArgument(
                   room: room,
-                  user: user,
+                  user: Get.find<SigninController>().user,
                 ),
               );
             },
@@ -50,6 +40,16 @@ class RoomListScreen extends GetView<RoomListController> {
               child: ListTile(
                 title: Text(room.name),
                 subtitle: Text("Esta sala utiliza tecnologia gRPC"),
+                leading: Container(
+                  height: 80,
+                  width: 80,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: NetworkImage('https://picsum.photos/200/200'),
+                    ),
+                  ),
+                ),
               ),
             ),
           )

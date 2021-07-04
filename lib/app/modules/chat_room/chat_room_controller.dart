@@ -45,7 +45,7 @@ class ChatRoomController extends GetxController {
 
     stream.listen((event) {
       if (event.isInternal) {
-        Get.snackbar(event.user.name, event.message,
+        Get.snackbar(event.message, room.name,
             colorText: Colors.white,
             backgroundColor: Colors.grey[600].withOpacity(0.6));
         return;
@@ -92,6 +92,9 @@ class ChatRoomController extends GetxController {
     messagesChat.insert(0, message);
   }
 
-  get userChat => types.User(id: _user.id);
+  get userChat => types.User(
+      id: _user.id,
+      firstName: _user.name,
+      avatarUrl: 'https://picsum.photos/200/200');
   Room get room => _room.value;
 }

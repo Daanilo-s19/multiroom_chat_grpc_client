@@ -1,4 +1,3 @@
-import 'package:aplication_flutter_grpc/app/data/models/room_model.dart';
 import 'package:aplication_flutter_grpc/app/data/providers/chat_manager_client_provider.dart';
 import 'package:aplication_flutter_grpc/app/data/repositories/chat_repository.dart';
 import 'package:aplication_flutter_grpc/app/modules/chat_room/chat_room_argument.dart';

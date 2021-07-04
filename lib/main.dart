@@ -1,4 +1,3 @@
-import 'package:aplication_flutter_grpc/app/modules/room_list/room_list_screen.dart';
 import 'package:aplication_flutter_grpc/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
