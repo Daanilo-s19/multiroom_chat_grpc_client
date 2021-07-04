@@ -2,6 +2,7 @@ import 'package:aplication_flutter_grpc/app/data/models/message_model.dart';
 import 'package:aplication_flutter_grpc/app/data/models/room_model.dart';
 import 'package:aplication_flutter_grpc/app/data/models/user_model.dart';
 import 'package:aplication_flutter_grpc/app/data/repositories/chat_repository.dart';
+import 'package:aplication_flutter_grpc/app/modules/chat_room/chat_room_argument.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
@@ -13,50 +14,59 @@ class ChatRoomController extends GetxController {
   ChatRoomController({ChatRepository repository})
       : _chatRepository = repository;
 
-  final _messageList = <Message>[].obs;
   final messagesChat = List<types.Message>.empty().obs;
-  final _userCount = 0.obs;
+  final users = List<User>.empty().obs;
 
-  User _user = User(id: Uuid().v4());
   final _room = Room().obs;
+  User _user = User(id: Uuid().v4());
 
   @override
   void onInit() {
     super.onInit();
     init(Get.arguments);
-    getMessages();
-    getUserCount();
+    _setupStreams();
   }
 
-  void init(Room room) {
-    _room.value = room;
+  void init(ChatRoomArgument args) {
+    _room.value = args.room;
+    _user = args.user;
     _room.refresh();
+  }
+
+  void _setupStreams() async {
+    await _chatRepository.joinRoom(_user);
+
+    getMessages();
+    getUserCount();
   }
 
   void getMessages() {
     final stream = _chatRepository.listenMessages(_user);
 
     stream.listen((event) {
-      final isUpdate = event.message == "User  joined.";
+      if (event.isInternal) {
+        Get.snackbar(event.user.name, event.message,
+            colorText: Colors.white,
+            backgroundColor: Colors.grey[600].withOpacity(0.6));
+        return;
+      }
+
       final textMessage = types.TextMessage(
         authorId: event.user.id,
         timestamp: DateTime.now().millisecondsSinceEpoch,
         id: Uuid().v4(),
-        text: !isUpdate ? event.message : "",
+        text: event.message,
       );
       addMessage(textMessage);
-      if (isUpdate) {
-        Get.snackbar(event.user.name, event.message,
-            colorText: Colors.white,
-            backgroundColor: Colors.grey[600].withOpacity(0.6));
-      }
     });
   }
 
   void getUserCount() {
-    final stream = _chatRepository.listenUserQuantity(_user);
+    final stream = _chatRepository.listenUsers(_user);
     stream.listen((event) {
-      _userCount.value = event;
+      users
+        ..clear()
+        ..addAll(event);
     });
   }
 
@@ -68,6 +78,12 @@ class ChatRoomController extends GetxController {
     ));
   }
 
+  @override
+  void onClose() async {
+    await _chatRepository.exitRoom(_user);
+    super.onClose();
+  }
+
   void setUserName(String name) {
     _user = User(id: _user.id, name: name);
   }
@@ -77,7 +93,5 @@ class ChatRoomController extends GetxController {
   }
 
   get userChat => types.User(id: _user.id);
-  List<Message> get messageList => _messageList;
   Room get room => _room.value;
-  Rx<int> get userCount => _userCount;
 }
