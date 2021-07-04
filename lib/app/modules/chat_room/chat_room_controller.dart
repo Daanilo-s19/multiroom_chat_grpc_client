@@ -52,8 +52,11 @@ class ChatRoomController extends GetxController {
       }
 
       final textMessage = types.TextMessage(
-        authorId: event.user.id,
-        timestamp: DateTime.now().millisecondsSinceEpoch,
+        author: types.User(
+            id: event.user.id,
+            imageUrl: "https://picsum.photos/200/200",
+            firstName: event.user.name),
+        createdAt: DateTime.now().millisecondsSinceEpoch,
         id: Uuid().v4(),
         text: event.message,
       );
@@ -95,6 +98,6 @@ class ChatRoomController extends GetxController {
   get userChat => types.User(
       id: _user.id,
       firstName: _user.name,
-      avatarUrl: 'https://picsum.photos/200/200');
+      imageUrl: 'https://picsum.photos/200/200');
   Room get room => _room.value;
 }

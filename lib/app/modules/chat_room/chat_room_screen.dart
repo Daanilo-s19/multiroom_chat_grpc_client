@@ -38,6 +38,8 @@ class ChatRoomScreen extends GetView<ChatRoomController> {
           messages: [...controller.messagesChat],
           onSendPressed: (message) => controller.sendMessage(message.text),
           user: controller.userChat,
+          showUserAvatars: true,
+          showUserNames: true,
         ),
       ),
     );
