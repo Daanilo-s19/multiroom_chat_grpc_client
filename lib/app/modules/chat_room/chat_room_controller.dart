@@ -2,6 +2,7 @@ import 'package:aplication_flutter_grpc/app/data/models/message_model.dart';
 import 'package:aplication_flutter_grpc/app/data/models/room_model.dart';
 import 'package:aplication_flutter_grpc/app/data/models/user_model.dart';
 import 'package:aplication_flutter_grpc/app/data/repositories/chat_repository.dart';
+import 'package:aplication_flutter_grpc/app/modules/chat_room/chat_room_argument.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
@@ -27,8 +28,9 @@ class ChatRoomController extends GetxController {
     _setupStreams();
   }
 
-  void init(Room room) {
-    _room.value = room;
+  void init(ChatRoomArgument args) {
+    _room.value = args.room;
+    _user = args.user;
     _room.refresh();
   }
 
