@@ -14,12 +14,11 @@ class ChatRoomController extends GetxController {
   ChatRoomController({ChatRepository repository})
       : _chatRepository = repository;
 
-  final _messageList = <Message>[].obs;
   final messagesChat = List<types.Message>.empty().obs;
-  final _userCount = 0.obs;
+  final users = List<User>.empty().obs;
 
-  User _user = User(id: Uuid().v4());
   final _room = Room().obs;
+  User _user = User(id: Uuid().v4());
 
   @override
   void onInit() {
@@ -53,18 +52,21 @@ class ChatRoomController extends GetxController {
       }
 
       final textMessage = types.TextMessage(
-          authorId: event.user.id,
-          timestamp: DateTime.now().millisecondsSinceEpoch,
-          id: Uuid().v4(),
-          text: event.message);
+        authorId: event.user.id,
+        timestamp: DateTime.now().millisecondsSinceEpoch,
+        id: Uuid().v4(),
+        text: event.message,
+      );
       addMessage(textMessage);
     });
   }
 
   void getUserCount() {
-    final stream = _chatRepository.listenUserQuantity(_user);
+    final stream = _chatRepository.listenUsers(_user);
     stream.listen((event) {
-      _userCount.value = event;
+      users
+        ..clear()
+        ..addAll(event);
     });
   }
 
@@ -91,7 +93,5 @@ class ChatRoomController extends GetxController {
   }
 
   get userChat => types.User(id: _user.id);
-  List<Message> get messageList => _messageList;
   Room get room => _room.value;
-  Rx<int> get userCount => _userCount;
 }

@@ -16,7 +16,7 @@ class _UserModalState extends State<UserModal> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      heightFactor: 0.22,
+      heightFactor: 0.25,
       child: Form(
         key: _formKey,
         child: Column(

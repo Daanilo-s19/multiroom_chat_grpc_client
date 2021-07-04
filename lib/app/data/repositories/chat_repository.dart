@@ -18,10 +18,12 @@ class ChatRepository {
     return stream.map((data) => Message.fromApi(data));
   }
 
-  Stream<int> listenUserQuantity(User user) {
+  Stream<List<User>> listenUsers(User user) {
     final stream = _clientProvider.client.listUsers(user.toApi());
 
-    return stream.map((data) => data.users.length);
+    return stream.map(
+      (data) => data.users.map((u) => User.fromApi(u)).toList(),
+    );
   }
 
   Future<void> sendMessage(Message message) async {
