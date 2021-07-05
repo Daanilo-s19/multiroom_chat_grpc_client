@@ -67,7 +67,9 @@ class ChatRoomController extends GetxController {
   void getUserCount() {
     final stream = _chatRepository.listenUsers(_user);
     stream.listen((event) {
-      users.value = event;
+      users
+        ..clear()
+        ..addAll(event);
     });
   }
 
